@@ -19,10 +19,15 @@
         <div class="glide__track" data-glide-el="track">
             <ul class="glide__slides" id="menu"></ul>
         </div>
+    </div>
 
-        <div class="glide__arrows" data-glide-el="controls">
-            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">⬅</button>
-            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">➡</button>
+    <div class="glide" id="web-slider">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                <li class="glide__slide"><iframe src="https://www.google.com" frameborder="0"></iframe></li>
+                <li class="glide__slide"><iframe src="https://www.eficode.com" frameborder="0"></iframe></li>
+                <li class="glide__slide"><iframe src="https://www.foreca.com" frameborder="0"></iframe></li>
+            </ul>
         </div>
     </div>
 
@@ -30,33 +35,61 @@
         async function fetchLunchData() {
             const response = await fetch('/lunch');
             const data = await response.json();
-            
             let content = "";
-            data.forEach(day => {
-                let dayContent = `<li class="glide__slide"><h2>${day.date}</h2><ul>`;
-                day.menu.forEach(item => {
-                    dayContent += `<li><strong>${item.dish}</strong> (${item.price}) - ${item.info}</li>`;
-                });
-                dayContent += `</ul></li>`;
-                content += dayContent;
+
+            data.forEach(restaurant => {
+                content += `<li class="glide__slide">
+                                <h2>${restaurant.restaurant}</h2>`;
+                if (restaurant.error) {
+                    content += `<p>Error: ${restaurant.error}</p>`;
+                } else {
+                    restaurant.menu.forEach(day => {
+                        content += `<h3>${day.date}</h3><ul>`;
+                        if (day.menu) {
+                            day.menu.forEach(item => {
+                                content += `<li><strong>${item.dish}</strong> (${item.price}) - ${item.info}</li>`;
+                            });
+                        } else {
+                            content += `<p>${day.message}</p>`;
+                        }
+                        content += `</ul>`;
+                    });
+                }
+                content += `</li>`;
             });
-    
+
             document.getElementById("menu").innerHTML = content;
-    
-            // ✅ Ensure Glide is initialized AFTER content is loaded
+
+            // ✅ Initialize both sliders AFTER content loads
             setTimeout(() => {
-                new Glide('.glide', {
-                    type: 'carousel',  // Ensures it loops
-                    perView: 2,        // One slide at a time
-                    autoplay: 10000,    // ✅ Auto-slide every 3 seconds
-                    hoverpause: false, // ✅ Keeps autoplay even if mouse hovers
-                    animationDuration: 800, // Smooth transition speed
+                new Glide('#menu-slider', {
+                    type: 'carousel',
+                    perView: 1,
+                    autoplay: 10000, 
+                    hoverpause: false,
+                    animationDuration: 800,
+                }).mount();
+
+                new Glide('#web-slider', {
+                    type: 'carousel',
+                    perView: 1,
+                    autoplay: 15000, // Rotate every 15 seconds
+                    hoverpause: false,
+                    animationDuration: 1000,
                 }).mount();
             }, 100);
         }
-    
+
         window.onload = fetchLunchData;
     </script>
-    
+
+    <style>
+        iframe {
+            width: 100%;
+            height: 500px; /* Adjust as needed */
+            border: none;
+        }
+    </style>
+
 </body>
 </html>
