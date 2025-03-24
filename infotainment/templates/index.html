@@ -12,17 +12,84 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@glidejs/glide"></script>
 </head>
 <body>
-    <h1>Päivän lounas</h1>
+    <div style="display: flex; width: 100%;">
+        <iframe src="https://tutka.meteo.fi/#/center/23.6707,61.5256/zoom/8.8" style="width: 50%; height: 500px; border: none;"></iframe>
+        <div style="width: 50%;">
+            <h2>🚆 Tampere Train Arrivals & Departures</h2>
+            <div class="loading" id="loading">Loading...</div>
+            <table id="train-table" style="margin-top: 10px; width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Train</th>
+                        <th>Type</th>
+                        <th>Arrival</th>
+                        <th>Departure</th>
+                        <th>Destination</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Train rows will go here -->
+                </tbody>
+            </table>
+        </div>
+    
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                fetchTrainData();
+            });
+    
+            async function fetchTrainData() {
+                try {
+                    const response = await fetch("https://rata.digitraffic.fi/api/v1/live-trains/station/TPE?minutes_before_departure=60&minutes_after_departure=10&minutes_before_arrival=60&minutes_after_arrival=15");
+                    const data = await response.json();
+                    const trainTableBody = document.querySelector('#train-table tbody');
+                    const loadingElement = document.getElementById('loading');
+                    
+                    // Clear loading message
+                    loadingElement.style.display = 'none';
+    
+                    // Loop through the train data and populate the table
+                    data.forEach(train => {
+                        const row = document.createElement('tr');
+    
+                        const trainCell = document.createElement('td');
+                        trainCell.textContent = train.trainNumber;
+                        row.appendChild(trainCell);
+    
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = train.trainCategory;
+                        row.appendChild(typeCell);
+    
+                        const arrivalCell = document.createElement('td');
+                        arrivalCell.textContent = getTrainTime(train, 'ARRIVAL');
+                        row.appendChild(arrivalCell);
+    
+                        const departureCell = document.createElement('td');
+                        departureCell.textContent = getTrainTime(train, 'DEPARTURE');
+                        row.appendChild(departureCell);
+    
+                        const destinationCell = document.createElement('td');
+                        destinationCell.textContent = train.timeTableRows[train.timeTableRows.length - 1]?.stationShortCode;
+                        row.appendChild(destinationCell);
+    
+                        trainTableBody.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error("Error fetching train data:", error);
+                }
+            }
+    
+            function getTrainTime(train, type) {
+                const timeRow = train.timeTableRows.find(row => row.stationShortCode === "TPE" && row.type === type);
+                return timeRow ? timeRow.scheduledTime : "-";
+            }
+        </script>
+    </div>
 
     <!-- Glide.js Slider -->
-    <div class="glide">
+    <div class="glide" id="menu-slider">
         <div class="glide__track" data-glide-el="track">
             <ul class="glide__slides" id="menu"></ul>
-        </div>
-
-        <div class="glide__arrows" data-glide-el="controls">
-            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">⬅</button>
-            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">➡</button>
         </div>
     </div>
 
@@ -30,33 +97,60 @@
         async function fetchLunchData() {
             const response = await fetch('/lunch');
             const data = await response.json();
-            
             let content = "";
-            data.forEach(day => {
-                let dayContent = `<li class="glide__slide"><h2>${day.date}</h2><ul>`;
-                day.menu.forEach(item => {
-                    dayContent += `<li><strong>${item.dish}</strong> (${item.price}) - ${item.info}</li>`;
-                });
-                dayContent += `</ul></li>`;
-                content += dayContent;
+
+            data.forEach(restaurant => {
+                content += `<li class="glide__slide">
+                                <h2>${restaurant.restaurant}</h2>`;
+                if (restaurant.error) {
+                    content += `<p>Error: ${restaurant.error}</p>`;
+                } else {
+                    restaurant.menu.forEach(day => {
+                        content += `<h3>${day.date}</h3><ul>`;
+                        if (day.menu) {
+                            day.menu.forEach(item => {
+                                content += `<li><strong>${item.dish}</strong> (${item.price}) - ${item.info}</li>`;
+                            });
+                        } else {
+                            content += `<p>${day.message}</p>`;
+                        }
+                        content += `</ul>`;
+                    });
+                }
+                content += `</li>`;
             });
-    
+
             document.getElementById("menu").innerHTML = content;
-    
-            // ✅ Ensure Glide is initialized AFTER content is loaded
+
             setTimeout(() => {
-                new Glide('.glide', {
-                    type: 'carousel',  // Ensures it loops
-                    perView: 2,        // One slide at a time
-                    autoplay: 10000,    // ✅ Auto-slide every 3 seconds
-                    hoverpause: false, // ✅ Keeps autoplay even if mouse hovers
-                    animationDuration: 800, // Smooth transition speed
+                new Glide('#menu-slider', {
+                    type: 'carousel',
+                    perView: 2,
+                    autoplay: 10000, 
+                    hoverpause: false,
+                    animationDuration: 800,
+                }).mount();
+
+                new Glide('#web-slider', {
+                    type: 'carousel',
+                    perView: 2,
+                    autoplay: 10000,
+                    hoverpause: false,
+                    animationDuration: 1000,
                 }).mount();
             }, 100);
         }
-    
+
         window.onload = fetchLunchData;
     </script>
-    
+
+    <style>
+        iframe {
+            width: 100%;
+            height: 500px; /* Adjust as needed */
+            border: none;
+        }
+    </style>
+
 </body>
 </html>
