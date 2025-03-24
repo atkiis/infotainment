@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lounaslista</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- Glide.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@glidejs/glide"></script>
+</head>
+<body>
+    <h1>Päivän lounas</h1>
+
+    <!-- Glide.js Slider -->
+    <div class="glide">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides" id="menu"></ul>
+        </div>
+
+        <div class="glide__arrows" data-glide-el="controls">
+            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">⬅</button>
+            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">➡</button>
+        </div>
+    </div>
+
+    <script>
+        async function fetchLunchData() {
+            const response = await fetch('/lunch');
+            const data = await response.json();
+            
+            let content = "";
+            data.forEach(day => {
+                let dayContent = `<li class="glide__slide"><h2>${day.date}</h2><ul>`;
+                day.menu.forEach(item => {
+                    dayContent += `<li><strong>${item.dish}</strong> (${item.price}) - ${item.info}</li>`;
+                });
+                dayContent += `</ul></li>`;
+                content += dayContent;
+            });
+    
+            document.getElementById("menu").innerHTML = content;
+    
+            // ✅ Ensure Glide is initialized AFTER content is loaded
+            setTimeout(() => {
+                new Glide('.glide', {
+                    type: 'carousel',  // Ensures it loops
+                    perView: 2,        // One slide at a time
+                    autoplay: 10000,    // ✅ Auto-slide every 3 seconds
+                    hoverpause: false, // ✅ Keeps autoplay even if mouse hovers
+                    animationDuration: 800, // Smooth transition speed
+                }).mount();
+            }, 100);
+        }
+    
+        window.onload = fetchLunchData;
+    </script>
+    
+</body>
+</html>
