@@ -15,21 +15,13 @@
     <h1>Päivän lounas</h1>
 
     <!-- Glide.js Slider -->
-    <div class="glide">
+    <div class="glide" id="menu-slider">
         <div class="glide__track" data-glide-el="track">
             <ul class="glide__slides" id="menu"></ul>
         </div>
     </div>
 
-    <div class="glide" id="web-slider">
-        <div class="glide__track" data-glide-el="track">
-            <ul class="glide__slides">
-                <li class="glide__slide"><iframe src="https://www.google.com" frameborder="0"></iframe></li>
-                <li class="glide__slide"><iframe src="https://www.eficode.com" frameborder="0"></iframe></li>
-                <li class="glide__slide"><iframe src="https://www.foreca.com" frameborder="0"></iframe></li>
-            </ul>
-        </div>
-    </div>
+    <iframe src="https://tutka.meteo.fi/#/center/23.6707,61.5256/zoom/8.8"></iframe>
 
     <script>
         async function fetchLunchData() {
@@ -60,12 +52,11 @@
 
             document.getElementById("menu").innerHTML = content;
 
-            // ✅ Initialize both sliders AFTER content loads
             setTimeout(() => {
                 new Glide('#menu-slider', {
                     type: 'carousel',
                     perView: 1,
-                    autoplay: 10000, 
+                    autoplay: 5000, 
                     hoverpause: false,
                     animationDuration: 800,
                 }).mount();
@@ -73,7 +64,7 @@
                 new Glide('#web-slider', {
                     type: 'carousel',
                     perView: 1,
-                    autoplay: 15000, // Rotate every 15 seconds
+                    autoplay: 10000,
                     hoverpause: false,
                     animationDuration: 1000,
                 }).mount();
