@@ -22,6 +22,29 @@ h2 {
     margin: 10px 0;
 }
 
+#train-table {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#train-table th, #train-table td {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Align Arrival & Departure Columns */
+.arrival, .departure {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Status Icons */
+.status-icon {
+    width: 15px;
+    height: 15px;
+}
+
 .glide {
     max-width: 90%;
     margin: 30px auto;
