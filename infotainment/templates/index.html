@@ -46,7 +46,7 @@
                     const data = await response.json();
                     const trainTableBody = document.querySelector('#train-table tbody');
                     const loadingElement = document.getElementById('loading');
-        
+
                     // Hide loading message
                     loadingElement.style.display = 'none';
         
@@ -69,6 +69,7 @@
                         const arrivalInfo = getTrainTime(train, 'ARRIVAL');
                         const arrivalCell = document.createElement('td');
                         arrivalCell.innerHTML = `<div class="arrival"><span class="status-icon">${arrivalInfo.icon}</span> ${arrivalInfo.time} ${arrivalInfo.status}</div>`;
+
                         row.appendChild(arrivalCell);
         
                         const departureInfo = getTrainTime(train, 'DEPARTURE');
@@ -125,7 +126,6 @@
                 return stationNames[shortCode] || shortCode; // If not found, return original short code
             }
         </script>
-             
     </div>
 
     <!-- Glide.js Slider -->
