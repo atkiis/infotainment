@@ -22,6 +22,7 @@
                 <thead>
                     <tr>
                         <th>Train</th>
+                        <th>Track</th>
                         <th>Destination</th>
                         <th>Arrival</th>
                         <th>Departure</th>
@@ -46,7 +47,7 @@
                     const data = await response.json();
                     const trainTableBody = document.querySelector('#train-table tbody');
                     const loadingElement = document.getElementById('loading');
-                  
+
                     // Hide loading message
                     loadingElement.style.display = 'none';
         
@@ -60,6 +61,12 @@
                         const trainCell = document.createElement('td');
                         trainCell.textContent = train.trainNumber;
                         row.appendChild(trainCell);
+
+                        // Track info
+                        const track = getDepartureTrack(train);
+                        const trackCell = document.createElement('td');
+                        trackCell.textContent = track || "N/A";
+                        row.appendChild(trackCell);
         
                         const destinationShortCode = train.timeTableRows[train.timeTableRows.length - 1]?.stationShortCode;
                         const destinationCell = document.createElement('td');
@@ -104,6 +111,23 @@
                 }
             }
         
+            function getTrainTime(train, type) {
+                const timeRow = train.timeTableRows.find(row => row.stationShortCode === "TPE" && row.type === type);
+                if (!timeRow) return { time: "-", status: "", icon: "" };
+        
+                const scheduledTime = new Date(timeRow.scheduledTime);
+                const actualTime = timeRow.actualTime ? new Date(timeRow.actualTime) : null;
+        
+                const formattedTime = scheduledTime.toLocaleTimeString("fi-FI", { hour: '2-digit', minute: '2-digit' });
+        
+                if (!actualTime || actualTime <= scheduledTime) {
+                    return { time: formattedTime, status: "On Time", icon: "🟢" };
+                } else {
+                    const delayMinutes = Math.round((actualTime - scheduledTime) / 60000);
+                    return { time: formattedTime, status: `Late (+${delayMinutes} min)`, icon: "🔴" };
+                }
+            }
+        
             function getFullStationName(shortCode) {
                 const stationNames = {
                     "HKI": "Helsinki",
@@ -127,7 +151,13 @@
                 };
                 return stationNames[shortCode] || shortCode; // If not found, return original short code
             }
+
+            function getDepartureTrack(train) {
+                const timeRow = train.timeTableRows.find(row => row.stationShortCode === "TPE" && row.type === "DEPARTURE");
+                return timeRow ? timeRow.commercialTrack || "N/A" : "N/A";
+            }
         </script>
+             
     </div>
 
     <!-- Glide.js Slider -->
