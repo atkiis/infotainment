@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="1800">
-    <title>Infotainment</title>
+    <title>Lounaslista</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <!-- Glide.js CSS -->
@@ -38,7 +38,7 @@
             document.addEventListener("DOMContentLoaded", function() {
                 fetchTrainData();
             });
-    
+        
             async function fetchTrainData() {
                 try {
                     const response = await fetch("https://rata.digitraffic.fi/api/v1/live-trains/station/TPE?minutes_before_departure=60&minutes_after_departure=10&minutes_before_arrival=60&minutes_after_arrival=15");
@@ -46,45 +46,64 @@
                     const trainTableBody = document.querySelector('#train-table tbody');
                     const loadingElement = document.getElementById('loading');
                     
-                    // Clear loading message
+                    // Hide loading message
                     loadingElement.style.display = 'none';
-    
+        
+                    // Clear existing rows
+                    trainTableBody.innerHTML = '';
+        
                     // Loop through the train data and populate the table
                     data.forEach(train => {
                         const row = document.createElement('tr');
-    
+        
                         const trainCell = document.createElement('td');
                         trainCell.textContent = train.trainNumber;
                         row.appendChild(trainCell);
-    
+        
                         const typeCell = document.createElement('td');
                         typeCell.textContent = train.trainCategory;
                         row.appendChild(typeCell);
-    
+        
+                        const arrivalInfo = getTrainTime(train, 'ARRIVAL');
                         const arrivalCell = document.createElement('td');
-                        arrivalCell.textContent = getTrainTime(train, 'ARRIVAL');
+                        arrivalCell.textContent = arrivalInfo.time + " " + arrivalInfo.status;
                         row.appendChild(arrivalCell);
-    
+        
+                        const departureInfo = getTrainTime(train, 'DEPARTURE');
                         const departureCell = document.createElement('td');
-                        departureCell.textContent = getTrainTime(train, 'DEPARTURE');
+                        departureCell.textContent = departureInfo.time + " " + departureInfo.status;
                         row.appendChild(departureCell);
-    
+        
                         const destinationCell = document.createElement('td');
                         destinationCell.textContent = train.timeTableRows[train.timeTableRows.length - 1]?.stationShortCode;
                         row.appendChild(destinationCell);
-    
+        
                         trainTableBody.appendChild(row);
                     });
                 } catch (error) {
                     console.error("Error fetching train data:", error);
                 }
             }
-    
+        
             function getTrainTime(train, type) {
                 const timeRow = train.timeTableRows.find(row => row.stationShortCode === "TPE" && row.type === type);
-                return timeRow ? timeRow.scheduledTime : "-";
+                if (!timeRow) return { time: "-", status: "" };
+        
+                const scheduledTime = new Date(timeRow.scheduledTime);
+                const actualTime = timeRow.actualTime ? new Date(timeRow.actualTime) : null;
+        
+                const formattedTime = scheduledTime.toLocaleTimeString("fi-FI", { hour: '2-digit', minute: '2-digit' });
+        
+                if (!actualTime || actualTime <= scheduledTime) {
+                    return { time: formattedTime, status: "🟢 On Time" };
+                } else {
+                    const delayMinutes = Math.round((actualTime - scheduledTime) / 60000);
+                    return { time: formattedTime, status: `🔴 Late (+${delayMinutes} min)` };
+                }
             }
         </script>
+        
+        
     </div>
 
     <!-- Glide.js Slider -->
