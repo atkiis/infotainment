@@ -22,10 +22,10 @@
                 <thead>
                     <tr>
                         <th>Train</th>
-                        <th>Type</th>
+                        <th>Destination</th>
                         <th>Arrival</th>
                         <th>Departure</th>
-                        <th>Destination</th>
+                        <th>Type</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +36,8 @@
     
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                fetchTrainData();
+                fetchTrainData();  // Initial data fetch on load
+                setInterval(fetchTrainData, 60000);  // Refresh every minute (60,000 ms)
             });
         
             async function fetchTrainData() {
@@ -45,7 +46,7 @@
                     const data = await response.json();
                     const trainTableBody = document.querySelector('#train-table tbody');
                     const loadingElement = document.getElementById('loading');
-                    
+
                     // Hide loading message
                     loadingElement.style.display = 'none';
         
@@ -60,23 +61,25 @@
                         trainCell.textContent = train.trainNumber;
                         row.appendChild(trainCell);
         
-                        const typeCell = document.createElement('td');
-                        typeCell.textContent = train.trainCategory;
-                        row.appendChild(typeCell);
+                        const destinationShortCode = train.timeTableRows[train.timeTableRows.length - 1]?.stationShortCode;
+                        const destinationCell = document.createElement('td');
+                        destinationCell.textContent = getFullStationName(destinationShortCode);
+                        row.appendChild(destinationCell);
         
                         const arrivalInfo = getTrainTime(train, 'ARRIVAL');
                         const arrivalCell = document.createElement('td');
-                        arrivalCell.textContent = arrivalInfo.time + " " + arrivalInfo.status;
+                        arrivalCell.innerHTML = `<div class="arrival"><span class="status-icon">${arrivalInfo.icon}</span> ${arrivalInfo.time} ${arrivalInfo.status}</div>`;
+
                         row.appendChild(arrivalCell);
         
                         const departureInfo = getTrainTime(train, 'DEPARTURE');
                         const departureCell = document.createElement('td');
-                        departureCell.textContent = departureInfo.time + " " + departureInfo.status;
+                        departureCell.innerHTML = `<div class="departure"><span class="status-icon">${departureInfo.icon}</span> ${departureInfo.time} ${departureInfo.status}</div>`;
                         row.appendChild(departureCell);
         
-                        const destinationCell = document.createElement('td');
-                        destinationCell.textContent = train.timeTableRows[train.timeTableRows.length - 1]?.stationShortCode;
-                        row.appendChild(destinationCell);
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = train.trainCategory;
+                        row.appendChild(typeCell);
         
                         trainTableBody.appendChild(row);
                     });
@@ -87,7 +90,7 @@
         
             function getTrainTime(train, type) {
                 const timeRow = train.timeTableRows.find(row => row.stationShortCode === "TPE" && row.type === type);
-                if (!timeRow) return { time: "-", status: "" };
+                if (!timeRow) return { time: "-", status: "", icon: "" };
         
                 const scheduledTime = new Date(timeRow.scheduledTime);
                 const actualTime = timeRow.actualTime ? new Date(timeRow.actualTime) : null;
@@ -95,15 +98,34 @@
                 const formattedTime = scheduledTime.toLocaleTimeString("fi-FI", { hour: '2-digit', minute: '2-digit' });
         
                 if (!actualTime || actualTime <= scheduledTime) {
-                    return { time: formattedTime, status: "🟢 On Time" };
+                    return { time: formattedTime, status: "On Time", icon: "🟢" };
                 } else {
                     const delayMinutes = Math.round((actualTime - scheduledTime) / 60000);
-                    return { time: formattedTime, status: `🔴 Late (+${delayMinutes} min)` };
+                    return { time: formattedTime, status: `Late (+${delayMinutes} min)`, icon: "🔴" };
                 }
             }
+        
+            function getFullStationName(shortCode) {
+                const stationNames = {
+                    "HKI": "Helsinki",
+                    "TPE": "Tampere",
+                    "JY": "Jyväskylä",
+                    "TKU": "Turku",
+                    "OUL": "Oulu",
+                    "RVS": "Rovaniemi",
+                    "LHI": "Lahti",
+                    "SEI": "Seinäjoki",
+                    "KPO": "Kuopio",
+                    "PSL": "Pieksämäki",
+                    "VRL": "Varkaus",
+                    "VS": "Vaasa",
+                    "NOA": "Nokia",
+                    "HL": "Hämeenlinna",
+                    "TL": "Toijala"
+                };
+                return stationNames[shortCode] || shortCode; // If not found, return original short code
+            }
         </script>
-        
-        
     </div>
 
     <!-- Glide.js Slider -->
