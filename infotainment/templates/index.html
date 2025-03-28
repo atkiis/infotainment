@@ -47,51 +47,63 @@
                     const data = await response.json();
                     const trainTableBody = document.querySelector('#train-table tbody');
                     const loadingElement = document.getElementById('loading');
-
+            
                     // Hide loading message
                     loadingElement.style.display = 'none';
-        
+            
                     // Clear existing rows
                     trainTableBody.innerHTML = '';
-        
+            
+                    // Sort trains by departure time
+                    data.sort((a, b) => {
+                        const aDeparture = getTrainDepartureTime(a);
+                        const bDeparture = getTrainDepartureTime(b);
+                        return aDeparture - bDeparture;
+                    });
+            
                     // Loop through the train data and populate the table
                     data.forEach(train => {
                         const row = document.createElement('tr');
-        
+            
                         const trainCell = document.createElement('td');
                         trainCell.textContent = train.trainNumber;
                         row.appendChild(trainCell);
-
+            
                         // Track info
                         const track = getDepartureTrack(train);
                         const trackCell = document.createElement('td');
                         trackCell.textContent = track || "N/A";
                         row.appendChild(trackCell);
-        
+            
                         const destinationShortCode = train.timeTableRows[train.timeTableRows.length - 1]?.stationShortCode;
                         const destinationCell = document.createElement('td');
                         destinationCell.textContent = getFullStationName(destinationShortCode);
                         row.appendChild(destinationCell);
-        
+            
                         const arrivalInfo = getTrainTime(train, 'ARRIVAL');
                         const arrivalCell = document.createElement('td');
                         arrivalCell.innerHTML = `<div class="arrival"><span class="status-icon">${arrivalInfo.icon}</span> ${arrivalInfo.time} ${arrivalInfo.status}</div>`;
                         row.appendChild(arrivalCell);
-        
+            
                         const departureInfo = getTrainTime(train, 'DEPARTURE');
                         const departureCell = document.createElement('td');
                         departureCell.innerHTML = `<div class="departure"><span class="status-icon">${departureInfo.icon}</span> ${departureInfo.time} ${departureInfo.status}</div>`;
                         row.appendChild(departureCell);
-        
+            
                         const typeCell = document.createElement('td');
                         typeCell.textContent = train.trainCategory;
                         row.appendChild(typeCell);
-        
+            
                         trainTableBody.appendChild(row);
                     });
                 } catch (error) {
                     console.error("Error fetching train data:", error);
                 }
+            }
+            
+            function getTrainDepartureTime(train) {
+                const departureRow = train.timeTableRows.find(row => row.stationShortCode === "TPE" && row.type === "DEPARTURE");
+                return departureRow ? new Date(departureRow.scheduledTime).getTime() : Infinity;
             }
         
             function getTrainTime(train, type) {
