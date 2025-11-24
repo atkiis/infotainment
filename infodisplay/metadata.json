@@ -1,0 +1,5 @@
+{
+  "name": "Tampere Infotainment",
+  "description": "A modern infotainment dashboard displaying real-time Tampere train schedules, local weather radar, and lunch menus, featuring a polished UI with specific branding colors.",
+  "requestFramePermissions": []
+}
