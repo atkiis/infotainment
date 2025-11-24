@@ -1,5 +1,5 @@
 <div align="center">
-<img width="900" height="475" alt="GHBanner" src="https://github.com/atkiis/infotainment/blob/feature/refactored-frontend/frontend.png" />
+<img width="750" height="475" alt="GHBanner" src="https://github.com/atkiis/infotainment/blob/feature/refactored-frontend/frontend.png" />
 </div>
 
 ## Run Locally
