@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/atkiis/infotainment/tree/feature/refactored-frontend/infodisplay/ruudunkaappaus.png" />
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/atkiis/infotainment/tree/feature/refactored-frontend/ruudunkaappaus.png" />
 </div>
 
 ## Run Locally
