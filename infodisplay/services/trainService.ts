@@ -1,7 +1,7 @@
 import { Train, TrainDisplayData, TimeTableRow } from '../types';
 import { getFullStationName, formatTime } from './stationUtils';
 
-const API_URL = "https://rata.digitraffic.fi/api/v1/live-trains/station/TPE?minutes_before_departure=60&minutes_after_departure=10&minutes_before_arrival=60&minutes_after_arrival=15";
+const API_URL = "https://rata.digitraffic.fi/api/v1/live-trains/station/TPE?minutes_before_departure=30&minutes_after_departure=10&minutes_before_arrival=30&minutes_after_arrival=15";
 
 export const fetchTrainData = async (): Promise<TrainDisplayData[]> => {
   try {
