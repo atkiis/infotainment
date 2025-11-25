@@ -11,7 +11,22 @@ interface RadarFrame {
   time: number;
   path: string;
 }
+interface WeatherEmoji {
+  id: string;
+  label: string;
+  icon: string;
+}
 
+export const WEATHER_EMOJI: WeatherEmoji[] = [
+  { id: 'sunny', label: 'Sunny', icon: '☀️' },
+  { id: 'partly-cloudy', label: 'Partly Cloudy', icon: '⛅️' },
+  { id: 'cloudy', label: 'Cloudy', icon: '☁️' },
+  { id: 'rainy', label: 'Rainy', icon: '🌧️' },
+  { id: 'storm', label: 'Thunderstorm', icon: '⛈️' },
+  { id: 'snow', label: 'Snowy', icon: '❄️' },
+  { id: 'wind', label: 'Windy', icon: '🌬️' },
+  { id: 'fog', label: 'Foggy', icon: '🌫️' }
+];
 interface TempLocation {
   name: string;
   lat: number;
@@ -205,6 +220,7 @@ export const WeatherWidget: React.FC = () => {
     <div className="w-full h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col relative">
       <div className="p-4 border-b border-gray-100 flex justify-between items-center z-10 bg-white relative">
         <h2 className="text-xl font-semibold text-[#005f8b] border-b-2 border-[#ffa500] inline-block pb-1">
+          <span className="mr-2">🌦️</span>
           Weather Radar
         </h2>
         
