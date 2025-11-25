@@ -10,7 +10,9 @@ const PORT = process.env.PORT || 3001;
 const LOUNAAT_URLS = [
   "https://www.lounaat.info/lounas/myllarit/tampere",
   "https://www.lounaat.info/lounas/old-mates-tampere/tampere",
-  "https://www.lounaat.info/lounas/aleksis/tampere"
+  "https://www.lounaat.info/lounas/aleksis/tampere",
+  "https://www.lounaat.info/lounas/edun-herkkukeidas-eetwartti/tampere",
+  "https://www.lounaat.info/lounas/moro-sky-bar/tampere"
 ];
 
 // --- HELPER: Today name in Finnish ---
@@ -87,44 +89,44 @@ async function scrapeA11() {
   const url =
     "https://www.compass-group.fi/ravintolat-ja-ruokalistat/foodco/kaupungit/tampere/tulli-business-park/";
 
+  let browser;
+
   try {
-    const browser = await puppeteer.launch({ headless: "new" });
+    browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "networkidle0" });
+    await page.waitForSelector(".meal-item--name-container span.compass-text", {
+      timeout: 10000,
+    });
 
-    // Select rendered menu blocks
-  const menu = await page.evaluate(() => {
-    const items = [];
-    const paragraphs = [...document.querySelectorAll("p")];
-
-    for (const p of paragraphs) {
-      const text = p.innerText.trim();
-
-      if (
-        !text ||
-        text.length < 3 ||
-        text.toLowerCase().includes("menu updating") ||   // ⛔ filter noise
-        text.includes("Lounas") ||                        // header
-        /^\d/.test(text)                                  // numeric
-      ) {
-        continue;
-      }
-
-      items.push({ dish: text });
-    }
-
-    return items;
-  });
-
-    await browser.close();
+    const menuItems = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".meal-item--name-container"))
+        .map((container) => {
+          const dish =
+            container.querySelector("span.compass-text")?.textContent?.trim() ||
+            "";
+          const info =
+            container.querySelector("p.compass-text")?.textContent?.trim() ||
+            "";
+          if (!dish) {
+            return null;
+          }
+          return { dish, price: "", info };
+        })
+        .filter((item) => item !== null);
+    });
 
     return {
       restaurant: "Å11",
-      menu,
+      menu: [{ date: TODAY_FIN, menu: menuItems }],
     };
   } catch (err) {
     console.error("Å11 scraper error:", err);
     return { restaurant: "Å11", error: err.message, menu: [] };
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 }
 
@@ -133,8 +135,8 @@ async function scrapeA11() {
 // ---------------------------------------------------------
 app.get("/lunch", async (req, res) => {
   const results = await Promise.all([
-    ...LOUNAAT_URLS.map((u) => scrapeLounaat(u)) //,
-    // scrapeA11(),
+    ...LOUNAAT_URLS.map((u) => scrapeLounaat(u)),
+    scrapeA11(),
   ]);
 
   res.json(results);

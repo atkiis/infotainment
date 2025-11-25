@@ -17,13 +17,13 @@ export const NewsTicker: React.FC = () => {
       {/* Scrolling Content */}
       <div className="whitespace-nowrap overflow-hidden flex-1 flex items-center h-full ml-8">
         <div className="animate-marquee inline-block pl-full">
-           <span className="mx-8 font-medium text-lg">Welcome to Tampere Lobby Infotainment.</span>
+           <span className="mx-8 font-medium text-lg">Welcome to Tampere Lobby.</span>
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
            <span className="mx-8 font-medium text-lg">Please remember to keep your access badge visible at all times.</span>
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
-           <span className="mx-8 font-medium text-lg">Next office wellness event: Friday Yoga at 15:00.</span>
+           <span className="mx-8 font-medium text-lg">Bluumo's massage service at the Tampere office 18.11 and 16.12.</span>
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
-           <span className="mx-8 font-medium text-lg">IT Maintenance scheduled for Saturday 22:00 - 02:00.</span>
+           <span className="mx-8 font-medium text-lg">IT at the office every months 3rd Thursday</span>
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
            <span className="mx-8 font-medium text-lg">Have a wonderful and productive day!</span>
         </div>
