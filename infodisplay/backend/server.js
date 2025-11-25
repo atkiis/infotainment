@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 3001;
 const LOUNAAT_URLS = [
   "https://www.lounaat.info/lounas/myllarit/tampere",
   "https://www.lounaat.info/lounas/old-mates-tampere/tampere",
-  "https://lounaat.info/lounas/aleksis/tampere",
   "https://www.lounaat.info/lounas/edun-herkkukeidas-eetwartti/tampere",
   "https://www.lounaat.info/lounas/moro-sky-bar/tampere"
 ];
