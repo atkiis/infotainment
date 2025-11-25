@@ -133,8 +133,8 @@ async function scrapeA11() {
 // ---------------------------------------------------------
 app.get("/lunch", async (req, res) => {
   const results = await Promise.all([
-    ...LOUNAAT_URLS.map((u) => scrapeLounaat(u)),
-    scrapeA11(),
+    ...LOUNAAT_URLS.map((u) => scrapeLounaat(u)) //,
+    // scrapeA11(),
   ]);
 
   res.json(results);
