@@ -65,7 +65,7 @@ export const LunchSlider: React.FC<LunchSliderProps> = ({ data, loading }) => {
     if (data.length > itemsPerView) {
       autoPlayRef.current = setInterval(() => {
         nextSlide();
-      }, 6000);
+      }, 4000);
     }
   };
 
