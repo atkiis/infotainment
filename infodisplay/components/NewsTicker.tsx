@@ -23,7 +23,7 @@ export const NewsTicker: React.FC = () => {
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
            <span className="mx-8 font-medium text-lg">Bluumo's massage service at the Tampere office 16.12.</span>
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
-           <span className="mx-8 font-medium text-lg">IT at the office every months 3rd Thursday</span>
+           <span className="mx-8 font-medium text-lg">IT at the office every months 2nd Thursday</span>
            <span className="mx-2 text-[#ffa500] text-2xl leading-none relative top-[2px]">•</span>
            <span className="mx-8 font-medium text-lg">Have a wonderful and productive day!</span>
         </div>
