@@ -9,5 +9,7 @@
 
 1. Install dependencies:
    `npm install`
-2. Run the app:
+2. Start backend:
+   `node server.js`
+3. Run the app:
    `npm run dev`
