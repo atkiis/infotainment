@@ -65,7 +65,7 @@ export const LunchSlider: React.FC<LunchSliderProps> = ({ data, loading }) => {
     if (data.length > itemsPerView) {
       autoPlayRef.current = setInterval(() => {
         nextSlide();
-      }, 4000);
+      }, 3000);
     }
   };
 
@@ -112,37 +112,40 @@ export const LunchSlider: React.FC<LunchSliderProps> = ({ data, loading }) => {
 
   return (
     <div 
-      className="w-full bg-white rounded-xl shadow-lg p-6 relative group overflow-hidden"
+      className="bg-white rounded-lg shadow-sm border border-gray-200 w-full h-full relative group overflow-hidden"
       onMouseEnter={stopAutoPlay}
       onMouseLeave={startAutoPlay}
     >
-      <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-2 relative z-10 bg-white">
-        <h2 className="text-xl font-semibold text-[#005f8b] border-b-2 border-[#ffa500] inline-block pb-1 flex items-center gap-2">
-          <Utensils className="w-5 h-5" /> Lunch Menus
-        </h2>
+      <div className="px-4 py-2.5 border-b border-gray-100 flex justify-between items-center z-[401] bg-white/95 backdrop-blur-sm absolute top-0 w-full shadow-sm">
+        <div className="flex items-center gap-2.5">
+          <div className="bg-sky-100 p-1.5 rounded-lg text-sky-700">
+            <Utensils className="w-4 h-4" />
+          </div>
+          <h2 className="text-[15px] font-extrabold text-slate-800 uppercase tracking-wider">Lunch Menus</h2>
+        </div>
         
         <div className="flex gap-2">
           <button 
             onClick={prevSlide}
-            className="p-2 rounded-full bg-gray-100 hover:bg-[#005f8b] hover:text-white transition-colors text-[#005f8b]"
+            className="p-1.5 rounded-full bg-gray-100 hover:bg-[#005f8b] hover:text-white transition-colors text-[#005f8b]"
             aria-label="Previous"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
           <button 
             onClick={nextSlide}
-            className="p-2 rounded-full bg-gray-100 hover:bg-[#005f8b] hover:text-white transition-colors text-[#005f8b]"
+            className="p-1.5 rounded-full bg-gray-100 hover:bg-[#005f8b] hover:text-white transition-colors text-[#005f8b]"
             aria-label="Next"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* Track Wrapper */}
-      <div className="w-full overflow-hidden">
+      <div className="w-full h-full overflow-hidden pt-14 pb-3 px-4">
         <div 
-          className="flex w-full"
+          className="flex w-full h-full"
           style={{ 
             transform: `translateX(${translateX}%)`,
             transition: isTransitioning ? 'transform 700ms ease-in-out' : 'none'
@@ -152,28 +155,30 @@ export const LunchSlider: React.FC<LunchSliderProps> = ({ data, loading }) => {
             // Item Wrapper: strictly 33.333% width to ensure 3 items fit perfectly
             <div 
               key={`${restaurant.restaurant}-${idx}`} 
-              className="flex-shrink-0 px-2 box-border w-1/3"
+              className="flex-shrink-0 px-2 box-border w-1/3 h-full"
             >
-              <div className="h-full bg-gray-50 rounded-lg p-4 border border-gray-100 hover:border-[#005f8b]/30 transition-colors flex flex-col min-h-[300px]">
-                <h3 className="text-lg font-bold text-[#002b45] mb-3 min-h-[3.5rem] line-clamp-2 border-b border-gray-200 pb-2">
+              <div className="h-full bg-gray-50 rounded-lg px-3 py-3 border border-gray-100 hover:border-[#005f8b]/30 transition-colors flex flex-col overflow-hidden min-h-[200px]">
+                <h3 className="text-[15px] font-bold text-[#002b45] mb-2 min-h-[2.75rem] line-clamp-2 border-b border-gray-200 pb-1.5">
                   {restaurant.restaurant}
                 </h3>
                 
-                <div className="flex-grow">
+                <div className="flex-grow overflow-hidden">
                   {restaurant.error ? (
                     <p className="text-red-500 text-sm">{restaurant.error}</p>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-2 h-full overflow-y-auto pr-1">
                       {restaurant.menu.map((day, dIdx) => (
                         <div key={dIdx}>
-                          <h4 className="text-xs font-bold text-[#ffa500] uppercase tracking-wider mb-2">{day.date}</h4>
+                          <h4 className="text-[11px] font-bold text-[#ffa500] uppercase tracking-wider mb-1.5">
+                            {day.date}
+                          </h4>
                           <ul className="space-y-2">
                             {day.menu && day.menu.length > 0 ? (
                               day.menu.map((item, iIdx) => (
-                                <li key={iIdx} className="text-sm text-gray-700 pb-2 border-b border-gray-200 last:border-0">
+                                <li key={iIdx} className="text-[13px] text-gray-700 pb-1.5 border-b border-gray-200 last:border-0">
                                   <div className="flex justify-between items-start gap-2">
-                                    <span className="font-medium text-gray-800 leading-tight">{item.dish}</span>
-                                    <span className="text-[#005f8b] font-bold whitespace-nowrap text-sm">{item.price}</span>
+                                    <span className="font-medium text-gray-800 leading-tight line-clamp-2">{item.dish}</span>
+                                    <span className="text-[#005f8b] font-bold whitespace-nowrap text-xs">{item.price}</span>
                                   </div>
                                   {item.info && <span className="text-xs text-gray-400 italic block mt-0.5">{item.info}</span>}
                                 </li>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="https://picsum.photos/32/32" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=1920, initial-scale=1.0, user-scalable=no" />
     <title>Tampere Lobby</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -29,6 +29,21 @@
       }
     </script>
     <style>
+      /* Full HD Infodisplay Optimization */
+      html, body {
+        width: 1920px !important;
+        height: 1080px !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      #root {
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+      }
+      
       /* Utility to hide scrollbar but allow scrolling */
       .scrollbar-hide {
         -ms-overflow-style: none;  /* IE and Edge */

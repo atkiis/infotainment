@@ -58,18 +58,18 @@ const getWeatherIcon = (code: number, isNight = false) => {
 };
 
 export const WeatherWidget: React.FC = () => {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<any>(null);
-  const radarLayers = useRef<any[]>([]);
-  const tempMarkers = useRef<any[]>([]);
+    const mapContainerRef = useRef<HTMLDivElement>(null);
+    const mapInstance = useRef<any>(null);
+    const radarLayers = useRef<any[]>([]);
+    const tempMarkers = useRef<any[]>([]);
 
-  const centerPosition = [61.4978, 23.761];
+    const centerPosition = [61.4978, 23.761];
 
-  const [frames, setFrames] = useState<RadarFrame[]>([]);
-  const [apiHost, setApiHost] = useState<string>('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+    const [frames, setFrames] = useState<RadarFrame[]>([]);
+    const [apiHost, setApiHost] = useState<string>('');
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
   const [currentTemp, setCurrentTemp] = useState<number | null>(null);
   const [currentWind, setCurrentWind] = useState<number | null>(null);
@@ -227,34 +227,34 @@ export const WeatherWidget: React.FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col overflow-hidden relative group">
-      <div className="p-4 border-b border-gray-100 flex justify-between items-center z-[401] bg-white/90 backdrop-blur-sm absolute top-0 w-full shadow-sm">
+      <div className="px-3 py-2 border-b border-gray-100 flex justify-between items-center z-[401] bg-white/95 backdrop-blur-sm absolute top-0 w-full shadow-sm">
         <div className="flex items-center gap-2.5">
-          <div className="bg-sky-100 p-1.5 rounded-lg text-sky-700">
-            <Radar className="w-5 h-5" />
+          <div className="bg-sky-100 p-1 rounded-lg text-sky-700">
+            <Radar className="w-4 h-4" />
           </div>
-          <h2 className="text-lg font-extrabold text-slate-800 uppercase tracking-wider">Weather Radar</h2>
+          <h2 className="text-base font-extrabold text-slate-800 uppercase tracking-wider">Weather Radar</h2>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-4 bg-white border border-gray-200 shadow-sm rounded-lg px-3 py-1.5">
-            <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 bg-white border border-gray-200 shadow-sm rounded-lg px-2 py-1">
+            <div className="flex items-center gap-1.5">
               <div className="text-amber-500">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
                   <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
                 </svg>
               </div>
-              <span className="text-2xl font-bold text-slate-800">
+              <span className="text-xl font-bold text-slate-800">
                 {currentTemp !== null ? `${Math.round(currentTemp)}°` : '--'}
               </span>
             </div>
           </div>
 
           {!isLoading && frames.length > 0 && (
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-600 bg-gray-50 px-2 py-1 rounded-md border border-gray-200 shadow-sm ml-2">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-gray-50 px-2 py-1 rounded-md border border-gray-200 shadow-sm">
               <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-sky-700 transition-colors">
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
-              <span className="w-12 text-center tabular-nums">{getFormattedTime(frames[currentIndex]?.time)}</span>
+              <span className="w-12 text-center tabular-nums text-[11px] font-semibold">{getFormattedTime(frames[currentIndex]?.time)}</span>
             </div>
           )}
         </div>
@@ -263,17 +263,17 @@ export const WeatherWidget: React.FC = () => {
       <div className="flex-1 bg-gray-100 relative">
         <div ref={mapContainerRef} className="w-full h-full absolute inset-0 z-0" />
 
-        <div className="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 z-[400] flex items-stretch h-20 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-          <div className="w-48 p-3 flex flex-col justify-center border-r border-gray-100 flex-shrink-0">
-            <p className="text-[10px] font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Rain Intensity</p>
+        <div className="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 z-[400] flex items-stretch h-[5.5rem] shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+          <div className="w-48 px-3 py-2 flex flex-col justify-center border-r border-gray-100 flex-shrink-0">
+            <p className="text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Rain Intensity</p>
             <div className="h-2 w-full rounded-full bg-gradient-to-r from-[#d4f1f9] via-[#00a5ff] to-[#00008b] mb-1"></div>
-            <div className="flex justify-between text-[9px] text-slate-400 font-medium">
+            <div className="flex justify-between text-[10px] text-slate-400 font-medium">
               <span>Light</span>
               <span>Heavy</span>
             </div>
           </div>
 
-          <div className="flex-1 flex items-center overflow-x-auto overflow-y-hidden px-4 gap-6 scrollbar-hide">
+          <div className="flex-1 flex items-center overflow-x-auto overflow-y-hidden px-4 gap-5 scrollbar-hide">
             {hourlyForecast.length > 0 ? (
               hourlyForecast.map((hour, idx) => {
                 const hourDate = new Date(hour.time);
@@ -281,13 +281,13 @@ export const WeatherWidget: React.FC = () => {
                 const isNight = h >= 22 || h <= 6;
 
                 return (
-                  <div key={idx} className="flex flex-col items-center min-w-[3rem] gap-1">
-                    <span className="text-[10px] font-medium text-slate-500">{getHourString(hour.time)}</span>
-                    <div className="my-0.5 transform scale-110">{getWeatherIcon(hour.code, isNight)}</div>
-                    <div className="flex flex-col items-center">
-                      <span className="text-sm font-bold text-slate-700">{Math.round(hour.temp)}°</span>
-                      <div className={`flex items-center gap-0.5 text-[9px] font-medium -mt-0.5 ${hour.rainProb > 0 ? 'text-sky-600' : 'text-gray-300'}`}>
-                        <Droplets className="w-2.5 h-2.5" />
+                  <div key={idx} className="flex flex-col items-center min-w-[4rem] gap-0.5 text-center">
+                    <span className="text-[11px] font-semibold text-slate-500 leading-tight">{getHourString(hour.time)}</span>
+                    <div className="flex items-center justify-center h-6">{getWeatherIcon(hour.code, isNight)}</div>
+                    <div className="flex flex-col items-center gap-0.5">
+                      <span className="text-sm font-bold text-slate-700 tabular-nums">{Math.round(hour.temp)}°</span>
+                      <div className={`flex items-center gap-0.5 text-[11px] font-medium tabular-nums ${hour.rainProb > 0 ? 'text-sky-600' : 'text-gray-300'}`}>
+                        <Droplets className="w-3 h-3" />
                         <span>{hour.rainProb}%</span>
                       </div>
                     </div>
