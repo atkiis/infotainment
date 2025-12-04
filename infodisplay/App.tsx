@@ -14,7 +14,6 @@ const App: React.FC = () => {
   const [loadingTrains, setLoadingTrains] = useState(true);
   const [loadingLunch, setLoadingLunch] = useState(true);
 
-  // Initial Data Load
   useEffect(() => {
     const loadTrains = async () => {
       setLoadingTrains(true);
@@ -33,13 +32,11 @@ const App: React.FC = () => {
     loadTrains();
     loadLunch();
 
-    // Refresh intervals
     const trainInterval = setInterval(async () => {
       const data = await fetchTrainData();
       setTrains(data);
-    }, 60000); // 1 minute
+    }, 60000);
 
-    // Refresh page every 30 minutes (legacy requirement)
     const refreshInterval = setInterval(() => {
       window.location.reload();
     }, 1800000);
@@ -51,33 +48,34 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] text-[#333] font-sans flex flex-col">
-      <Header />
+    <div className="w-full min-h-screen bg-[#f4f4f4] text-[#333] font-sans flex justify-center">
+      <div className="w-full h-full max-w-[1920px] flex flex-col">
+        <Header />
 
-      <main className="flex-grow max-w-[1920px] mx-auto px-4 md:px-6 space-y-6 w-full pb-6">
-        
-        {/* Top Section: Map & Trains */}
-        <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[600px]">
-          {/* Left: Weather Map */}
-          <div className="w-full lg:w-1/2 h-[500px] lg:h-full">
-            <WeatherWidget />
+        <main className="flex-1 max-w-[1920px] mx-auto px-4 md:px-6 space-y-6 w-full pb-6 overflow-hidden flex flex-col">
+          <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+            <div className="w-full lg:w-1/2 min-h-[420px] flex">
+              <div className="flex-1 min-h-0">
+                <WeatherWidget />
+              </div>
+            </div>
+
+            <div className="w-full lg:w-1/2 min-h-[420px] flex">
+              <div className="flex-1 min-h-0">
+                <TrainTable data={trains} isLoading={loadingTrains} />
+              </div>
+            </div>
           </div>
 
-          {/* Right: Train Table */}
-          <div className="w-full lg:w-1/2 h-[500px] lg:h-full">
-            <TrainTable data={trains} isLoading={loadingTrains} />
+          <div className="w-full flex-none">
+            <LunchSlider data={lunchMenus} loading={loadingLunch} />
           </div>
+        </main>
+
+        <div className="mt-auto">
+          <NewsTicker />
         </div>
-
-        {/* Bottom Section: Lunch Slider */}
-        <div className="w-full">
-          <LunchSlider data={lunchMenus} loading={loadingLunch} />
-        </div>
-
-      </main>
-
-      {/* Footer Ticker */}
-      <NewsTicker />
+      </div>
     </div>
   );
 };
